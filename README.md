@@ -1,13 +1,15 @@
 # fabric-via-ansible
 A short and quick install of fabric via ansible. The idea is to setup one master VM that will run ansible and then one or many machines that ansible will install Hyperledger Fabric on. First, Ansible will be installed on the master VM, then the other machine(s) will have additional ssh access created. The additional ssh access is only necessary if operating in a more constrained environment, a normal AWS environment does not need these extra steps.
 
-### Install Ansible on dedicated vm
+## Install Ansible on dedicated vm
 1. `$ sudo apt-get update`
 1. `$ sudo apt-get install software-properties-common`
 1. `$ sudo apt-add-repository --yes --update ppa:ansible/ansible`
 1. `$ sudo apt-get install ansible`
 
-### Create new ec2 instance(s) for target Fabric environment and prepare access
+## Create new ec2 instance(s) for target Fabric environment and prepare access
+
+#### Enable password authentication on target vm
 This step is only necessary if operating in a restrictive environment and additional identity keys need generated than the ones already present. 
   1. ssh to target vm
   1. edit the sshd_config `$ sudo vim /etc/ssh/sshd_config`
@@ -16,5 +18,13 @@ This step is only necessary if operating in a restrictive environment and additi
   1. create a password for the user, in this case ubuntu `$ sudo passwd ubuntu`
   1. restart the ssh service `$ sudo service ssh restart`
   1. verify you can ssh to target machine with password authentication and accept ip as a known host
+
+### Create new identity key from Ansible VM
+1. generate a new pub/priv key set
+`$ ssh-keygen`
+1. Copy the key to the target fabrc vm `$ ssh-copy-id ubuntu@${your_ip_here}`
+You should be asked for the password to the vm that you created in the previous step
+1. Logout and try ssh back into the VM to verify you are not prompted for a password
+
 
 
