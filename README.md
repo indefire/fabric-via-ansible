@@ -20,8 +20,7 @@ This step is only necessary if operating in a restrictive environment and additi
   1. verify you can ssh to target machine with password authentication and accept ip as a known host
 
 ### Create new identity key from Ansible VM
-1. generate a new pub/priv key set
-`$ ssh-keygen`
+1. generate a new pub/priv key set `$ ssh-keygen`
 1. Copy the key to the target fabrc vm `$ ssh-copy-id ubuntu@${your_ip_here}`
 You should be asked for the password to the vm that you created in the previous step
 1. Logout and try to ssh back into the VM to verify you are not prompted for a password `ssh ubuntu@${target_ip_here}
@@ -31,18 +30,19 @@ You should be asked for the password to the vm that you created in the previous 
 We need to modify ansible's hosts file so it knows which machine or machine we wish to perform the setup on. Then run the playbooks. The first playbook installs python via apt-get so when the second one runs, it can gather facts about the system.
 
 1. Modify ansible host file `sudo vim /etc/ansible/hosts`
-1. Setup the ip in this file. The below file contents is telling ansible the group's name is 'fabric' and the alias for the specific ip is fab1-4: 
-```
-[fabric]
-fab1-4 ansible_host=${target_ip_here}
-```
-1. Verify the two playbook files have the targeted group defined `cat install-python.yaml` The -hosts: section should correspond to what we specified in the [] brackets in the hosts file
-```
+1. Setup the ip in this file. The below file contents is telling ansible the group's name is 'fabric' and the alias for the specific ip is fab1-4: `[fabric]
+`fab1-4 ansible_host=${target_ip_here}`
+1. Verify the two playbook files have the targeted group defined `cat install-python.yaml` The -hosts: section should correspond to what we specified in the [ ] brackets in the hosts file 
 - hosts:fabric
-```
 1. Run the ansible playbook to install python `$ ansible-playbook install-pythong.yaml`
-2. Now run the playbook to install fabric, its dependencies, and nodejs for the examples `$ ansible-playbook fabric-1.4.yaml`
+1. Now run the playbook to install fabric, its dependencies, and nodejs for the examples `$ ansible-playbook fabric-1.4.yaml` You should see ok=19 changed=12 or something similar in the output with no failures
 
+## Verify Fabric network
+1. Start a new terminal (ansible added the ubuntu user to the docker group, so a new terminal is necessary)
+1. `$ cd /home/ubuntu/fabric-samples/first-network`
+1. Start fabric's example `$ ./byfn.sh up`
+
+Now we have a functional network we can follow along with fabric's official tutorial and documentation here: [Fabric 1.4 build_network](https://hyperledger-fabric.readthedocs.io/en/release-1.4/build_network.html)
 
 ## Useful information
 1. ssh-copy-id is not present, run this instead: `cat ~/.ssh/id_rsa.pub | ssh ubuntu@${your_ip_here} 'umask 0077; mkdir -p .ssh; cat >> .ssh/authorized_keys && echo "Key copied"'`   
