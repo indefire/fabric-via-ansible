@@ -32,7 +32,7 @@ We need to modify ansible's hosts file so it knows which machine or machine we w
 1. Modify ansible host file `sudo vim /etc/ansible/hosts`
 1. Setup the ip in this file. The below file contents is telling ansible the group's name is 'fabric' and the alias for the specific ip is fab1-4: `[fabric]
 `fab1-4 ansible_host=${target_ip_here}`
-1. Verify the two playbook files have the targeted group defined `cat install-python.yaml` The -hosts: section should correspond to what we specified in the [ ] brackets in the hosts file 
+1. Verify the two playbook files have the targeted group defined `cat install-python.yaml` The -hosts: section should correspond to what we specified in the `[]` brackets in the hosts file 
 - hosts:fabric
 1. Run the ansible playbook to install python `$ ansible-playbook install-pythong.yaml`
 1. Now run the playbook to install fabric, its dependencies, and nodejs for the examples `$ ansible-playbook fabric-1.4.yaml` You should see ok=19 changed=12 or something similar in the output with no failures
@@ -43,6 +43,22 @@ We need to modify ansible's hosts file so it knows which machine or machine we w
 1. Start fabric's example `$ ./byfn.sh up`
 
 Now we have a functional network we can follow along with fabric's official tutorial and documentation here: [Fabric 1.4 build_network](https://hyperledger-fabric.readthedocs.io/en/release-1.4/build_network.html)
+There are a good number of simple and complex examples within the fabric-samples directory, all of their descriptions are here: https://github.com/hyperledger/fabric-samples/ They are however constantly evolving.
+
 
 ## Useful information
-1. ssh-copy-id is not present, run this instead: `cat ~/.ssh/id_rsa.pub | ssh ubuntu@${your_ip_here} 'umask 0077; mkdir -p .ssh; cat >> .ssh/authorized_keys && echo "Key copied"'`   
+- ssh-copy-id is not present, run this instead: `cat ~/.ssh/id_rsa.pub | ssh ubuntu@${your_ip_here} 'umask 0077; mkdir -p .ssh; cat >> .ssh/authorized_keys && echo "Key copied"'`   
+### XRDP Install on an AWS instance
+https://datawookie.netlify.com/blog/2017/08/remote-desktop-on-an-ubuntu-ec2-instance/
+- Enable Password Login
+```
+sudo apt update
+sudo apt install -y ubuntu-desktop xrdp
+vim /etc/ssh/sshd_config
+//search for PasswordAuthentication and change from no to yes
+PasswordAuthentication yes
+sudo passwd ubuntu
+sudo systemctl restart ssh
+
+
+```
