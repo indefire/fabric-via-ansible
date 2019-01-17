@@ -54,6 +54,17 @@ There are a good number of simple and complex examples within the fabric-samples
 
 ## Useful information
 - ssh-copy-id is not present, run this instead: `cat ~/.ssh/id_rsa.pub | ssh ubuntu@${your_ip_here} 'umask 0077; mkdir -p .ssh; cat >> .ssh/authorized_keys && echo "Key copied"'`   
+- Fabric now supports GoLang, Java, and JavaScript chaincode. This is a huge improvement that Java and JavaScript is now supported in Fabric 1.4
+- 
+### Fabric Samples https://github.com/hyperledger/fabric-samples/
+- /balance-transfer is the application we used as a basis for our application and heavily modified the nodejs implementation. I did not find the JWT use very helpful and more of a hinderence.
+- /fabcar started out as its own separate application before they consolidated the samples, it is a very easy to understand, straight-forward nodejs sdk utilization
+- /first-network was the basis for our fabric implementation and it makes creating your own network really easy by modifying their existing scripts
+- /high-throughput is a more complex implementation of chaincode released much later than our initial endeavor. It shows off a lot of the later features such as pruning
+
+### Fabric SDKs
+There are a good number of SDKs all in various states of development. We have used the nodesdk and the JavaSDK. I found the nodesdk to be pretty easy to use, but as a Java developer I am drawn to the JavaSDK. The java sdk is pretty mature and we have used it on another project, however, I find the test cases pretty difficult to follow.
+
 ### XRDP Install on an AWS instance
 https://datawookie.netlify.com/blog/2017/08/remote-desktop-on-an-ubuntu-ec2-instance/
 - Enable Password Login
