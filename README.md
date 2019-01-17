@@ -66,5 +66,25 @@ PasswordAuthentication yes
 sudo passwd ubuntu
 sudo systemctl restart ssh
 
-
 ```
+- Before logging on via xrdp create a new file to disalbe known ubuntu issue with "Create Managed Color Device" popup as explained here: http://c-nergy.be/blog/?p=12043
+```
+sudo vim /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf
+```
+Add the below contents:
+```
+polkit.addRule(function(action, subject) {
+ if ((action.id == "org.freedesktop.color-manager.create-device" ||
+ action.id == "org.freedesktop.color-manager.create-profile" ||
+ action.id == "org.freedesktop.color-manager.delete-device" ||
+ action.id == "org.freedesktop.color-manager.delete-profile" ||
+ action.id == "org.freedesktop.color-manager.modify-device" ||
+ action.id == "org.freedesktop.color-manager.modify-profile") &&
+ subject.isInGroup("{users}")) {
+ return polkit.Result.YES;
+ }
+ });
+ 
+```
+restart the vm
+`sudo reboot`
