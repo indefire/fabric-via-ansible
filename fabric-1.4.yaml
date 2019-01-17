@@ -1,0 +1,116 @@
+---
+- hosts: fabric
+  become: true
+  gather_facts: true
+  vars:
+    home_dir: "/home/ubuntu"
+    file_owner: ubuntu
+    go_version: "1.10"
+    fabric_version: 1.4.0
+  tasks:
+
+  - debug: msg="Installing docker"  
+
+  - name: install docker
+    apt:  name=docker.io state=present update_cache=yes
+
+  - name: install docker-compose
+    apt:  name=docker-compose state=present update_cache=yes
+
+  - debug: msg="Adding Ubuntu to docker"
+  
+  - name: Add Ubuntu to docker
+    #    user: name=ubuntu groups=docker append=yes
+    become: yes
+    user:
+        name: ubuntu
+        shell: /bin/bash
+        groups: docker
+        append: yes
+
+  - name: Reset Connections
+    become: yes
+    meta: reset_connection
+    #**************SHOULD CHANGE ABOVE TO RESTART sshd
+    # sudo /etc/init.d/ssh restart
+    # become: true
+    # shell: "usermod -aG docker ubuntu"  
+    # ssh-reconnect: all=true
+
+    # 
+  - debug: msg="logout login"
+
+
+
+  - debug: msg="Installing GoLang {{go_version}}" 
+  - name: download golang tar
+    get_url:
+      url: "https://dl.google.com/go/go{{go_version}}.linux-amd64.tar.gz" 
+      dest: "{{home_dir}}"
+      mode: 0440
+
+
+  - name: extract go
+    unarchive:
+      src: "{{home_dir}}/go{{go_version}}.linux-amd64.tar.gz"
+      dest: /usr/local
+      copy: no
+    become: true
+
+  - name: create go directories in home
+    file:
+      path: "{{item}}"
+      state: directory
+      owner: "{{file_owner}}"
+      group: "{{file_owner}}"
+      mode: 0775
+    with_items:
+    - "{{home_dir}}/go"
+    - "{{home_dir}}/go/bin"
+
+  - name: modify .bashrc
+    blockinfile:
+      dest: "{{home_dir}}/.bashrc"
+      block: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        export PATH=$GOBIN:$PATH:/usr/local/go/bin
+      marker: '# {mark} Ansible managed block -changes for go lang'
+      insertafter: EOF
+      create: yes
+
+  - debug: msg="Installing nodejs"  
+  - name: installing nodejs
+    apt: name=nodejs state=present update_cache=yes
+
+
+  - debug: msg="Installing npm"  
+  - name: installing npm
+    apt: name=npm state=present update_cache=yes
+
+
+  - name: checking node
+    become: no
+    shell: "nodejs --version && npm --version"
+    args:
+      executable: /bin/bash
+
+
+
+  # - name: install node via nvm
+  #   become: false
+  #   shell: "source {{home_dir}}/.profile && nvm install 8.9"    
+  #   args:
+  #     executable: /bin/bash    
+
+  - name: download fabric script
+    get_url:
+      url: "http://bit.ly/2ysbOFE"
+      dest: "{{home_dir}}/fabric_setup.sh"
+      mode: 0777    
+
+  - name: Running fabric fabric_setup
+    become: false
+    shell: "{{home_dir}}/fabric_setup.sh {{fabric_version}}"        
+    args:
+      executable: /bin/bash     
