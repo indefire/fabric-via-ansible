@@ -62,8 +62,8 @@ There are a good number of simple and complex examples within the fabric-samples
 - /first-network was the basis for our fabric implementation and it makes creating your own network really easy by modifying their existing scripts
 - /high-throughput is a more complex implementation of chaincode released much later than our initial endeavor. It shows off a lot of the later features such as pruning
 
-### Fabric SDKs
-There are a good number of SDKs all in various states of development. We have used the nodesdk and the JavaSDK. I found the nodesdk to be pretty easy to use, but as a Java developer I am drawn to the JavaSDK. The java sdk is pretty mature and we have used it on another project, however, I find the test cases pretty difficult to follow.
+### Fabric SDKs https://hyperledger-fabric.readthedocs.io/en/release-1.4/fabric-sdks.html 
+There are a good number of SDKs all in various states of development. We have used the nodesdk and the JavaSDK. I found the nodesdk to be pretty easy to use, but as a Java developer I am drawn to the (JavaSDK) [https://github.com/hyperledger/fabric-sdk-java]. The java sdk is pretty mature and we have used it on another project, however, I find the test cases pretty difficult to follow. I have not looked at it since the 1.2 release so it might have been streamlined since then.
 
 ### XRDP Install on an AWS instance
 https://datawookie.netlify.com/blog/2017/08/remote-desktop-on-an-ubuntu-ec2-instance/
