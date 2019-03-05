@@ -40,7 +40,7 @@ fab1-4 ansible_host=${target_ip_here}
 ```
 - hosts:fabric
 ```
-1. Run the ansible playbook to install python `$ ansible-playbook install-pythong.yaml`
+1. Run the ansible playbook to install python `$ ansible-playbook install-python.yaml`
 1. Now run the playbook to install fabric, its dependencies, and nodejs for the examples `$ ansible-playbook fabric-1.4.yaml` You should see ok=19 changed=12 or something similar in the output with no failures
 
 ## Verify Fabric network
